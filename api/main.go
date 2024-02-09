@@ -7,20 +7,35 @@ import (
 	"github.com/joho/godotenv"
 )
 
+func getAndStoreMarketData(m *MarketDataAPI, d *DataStorage, tickers []string) error {
+	todaysData, err := m.GetTodaysData(tickers)
+	if err != nil {
+		return err
+	}
+	err = d.sendMarketDataToJSONBin(*todaysData)
+	if err != nil {
+		return err
+	}
+	fmt.Printf("Retrieved and stored market data: \n\n %v\n", todaysData)
+	return nil
+}
+
 func main() {
-	tickers := []string{"AAPL", "MSFT", "GOOGL", "AMZN", "FB"}
 	err := godotenv.Load()
 	if err != nil {
 		panic("Error loading .env file")
 	}
-	apiKey := os.Getenv("POLYGON_API_KEY")
-	if apiKey == "" {
+	polygonKey := os.Getenv("POLYGON_API_KEY")
+	if polygonKey == "" {
 		panic("POLYGON_API_KEY environment variable not set")
 	}
-	marketDataAPI := BuildMarketDataAPI(apiKey)
-	todaysData, err := marketDataAPI.GetTodaysData(tickers)
-	if err != nil {
-		panic(err)
+	jsonBinKey := os.Getenv("JSON_BIN_API_KEY")
+	if jsonBinKey == "" {
+		panic("JSON_BIN_API_KEY environment variable not set")
 	}
-	fmt.Printf("%s\n", todaysData)
+
+	tickers := []string{"AAPL", "MSFT", "GOOGL", "AMZN", "FB"}
+	marketDataAPI := BuildMarketDataAPI(polygonKey)
+	dataStorage := BuildDataStorage(jsonBinKey)
+	getAndStoreMarketData(marketDataAPI, dataStorage, tickers)
 }
