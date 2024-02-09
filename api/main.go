@@ -17,14 +17,10 @@ func main() {
 	if apiKey == "" {
 		panic("POLYGON_API_KEY environment variable not set")
 	}
-	marketData := BuildMarketDataAPI(apiKey)
-	for _, ticker := range tickers {
-		response, err := marketData.GetEndOfDay(ticker)
-		if err != nil {
-			panic(err)
-		}
-		for _, result := range response.Results {
-			fmt.Printf("Ticker: %s, Close: %f\n", ticker, result.Close)
-		}
+	marketDataAPI := BuildMarketDataAPI(apiKey)
+	todaysData, err := marketDataAPI.GetTodaysData(tickers)
+	if err != nil {
+		panic(err)
 	}
+	fmt.Printf("%s\n", todaysData)
 }
