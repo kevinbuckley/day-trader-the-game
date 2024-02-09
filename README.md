@@ -13,7 +13,7 @@ This project is a virtual day trading game that allows users to simulate the tra
 1. Clone the repository to your local machine.
 2. Navigate to the project directory.
 3. Install the required dependencies by running `go get`.
-4. Set up your environment variables. Create a `.env` file in the root directory of the project, and add your Polygon API key like so:
+4. Set up your environment variables. Create a `.env` file in the /api directory of the project, and add your Polygon API key like so:
 
    ```properties
    POLYGON_API_KEY="your-api-key-here"
