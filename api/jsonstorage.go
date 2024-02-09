@@ -15,7 +15,7 @@ func BuildDataStorage(apiKey string) *DataStorage {
 	return &DataStorage{apiKey: apiKey}
 }
 
-func (d *DataStorage) sendMarketDataToJSONBin(data MarketData) error {
+func (d *DataStorage) SendMarketDataToJSONBin(data MarketData) error {
 	jsonData, err := json.Marshal(data)
 
 	fmt.Println(d.apiKey)
@@ -42,7 +42,6 @@ func (d *DataStorage) sendMarketDataToJSONBin(data MarketData) error {
 		fmt.Printf("error from JSONBin: %v\n", resp)
 		return fmt.Errorf("failed to send data to JSONBin, status code: %d", resp.StatusCode)
 	}
-	fmt.Println("6")
 
 	fmt.Printf("response from JSONBin: %v\n", resp)
 
