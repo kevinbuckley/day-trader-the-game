@@ -16,7 +16,8 @@ This project is a virtual day trading game that allows users to simulate the tra
 4. Set up your environment variables. Create a `.env` file in the /api directory of the project, and add your Polygon API key like so:
 
    ```properties
-   POLYGON_API_KEY="your-api-key-here"
+   POLYGON_API_KEY="your-api-key-here-from-https://polygon.io/"
+   JSON_BIN_KEY="your-api-key-here-from-https://jsonbin.io/app/dashboard"
    ```
 
 5. Run the program by executing `go run main.go`.

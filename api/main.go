@@ -12,6 +12,7 @@ func getAndStoreMarketData(m *MarketDataAPI, d *DataStorage, tickers []string) e
 	if err != nil {
 		return err
 	}
+	fmt.Printf("Retrieved market data: \n\n %v\n", todaysData)
 	err = d.sendMarketDataToJSONBin(*todaysData)
 	if err != nil {
 		return err
