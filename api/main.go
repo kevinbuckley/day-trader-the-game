@@ -13,7 +13,7 @@ func getAndStoreMarketData(m *MarketDataAPI, d *DataStorage, tickers []string) e
 		return err
 	}
 	fmt.Printf("Retrieved market data: \n\n %v\n", todaysData)
-	err = d.sendMarketDataToJSONBin(*todaysData)
+	err = d.SendMarketDataToJSONBin(*todaysData)
 	if err != nil {
 		return err
 	}
@@ -35,7 +35,8 @@ func main() {
 		panic("JSON_BIN_API_KEY environment variable not set")
 	}
 
-	tickers := []string{"AAPL", "MSFT", "GOOGL", "AMZN", "FB"}
+	//tickers := []string{"AAPL", "MSFT", "GOOGL", "AMZN", "FB"}
+	tickers := []string{"AAPL"}
 	marketDataAPI := BuildMarketDataAPI(polygonKey)
 	dataStorage := BuildDataStorage(jsonBinKey)
 	getAndStoreMarketData(marketDataAPI, dataStorage, tickers)
