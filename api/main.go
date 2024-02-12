@@ -7,18 +7,24 @@ import (
 	"github.com/joho/godotenv"
 )
 
-func getAndStoreMarketData(m *MarketDataAPI, d *DataStorage, tickers []string) error {
+func getAndStoreMarketData(m *MarketDataAPI, d *DataStorage, tickers []string) string {
 	todaysData, err := m.GetTodaysData(tickers)
 	if err != nil {
-		return err
+		panic(err)
 	}
-	fmt.Printf("Retrieved market data: \n\n %v\n", todaysData)
-	err = d.SendMarketDataToJSONBin(*todaysData)
+	binId, err := d.SendMarketDataToJSONBin(*todaysData)
 	if err != nil {
-		return err
+		panic(err)
 	}
-	fmt.Printf("Retrieved and stored market data: \n\n %v\n", todaysData)
-	return nil
+	return binId
+}
+
+func getRequiredEnvVar(key string) string {
+	value := os.Getenv(key)
+	if value == "" {
+		panic(fmt.Sprintf("%s environment variable not set", key))
+	}
+	return value
 }
 
 func main() {
@@ -26,18 +32,17 @@ func main() {
 	if err != nil {
 		panic("Error loading .env file")
 	}
-	polygonKey := os.Getenv("POLYGON_API_KEY")
-	if polygonKey == "" {
-		panic("POLYGON_API_KEY environment variable not set")
-	}
-	jsonBinKey := os.Getenv("JSON_BIN_API_KEY")
-	if jsonBinKey == "" {
-		panic("JSON_BIN_API_KEY environment variable not set")
-	}
+	polygonKey := getRequiredEnvVar("POLYGON_API_KEY")
+	jsonBinKey := getRequiredEnvVar("JSON_BIN_API_KEY")
+	jsonBinCollectionId := getRequiredEnvVar("JSON_BIN_COLLECTION_ID")
 
-	//tickers := []string{"AAPL", "MSFT", "GOOGL", "AMZN", "FB"}
-	tickers := []string{"AAPL"}
+	tickers := []string{"AAPL", "MSFT", "GOOGL", "AMZN", "FB"}
 	marketDataAPI := BuildMarketDataAPI(polygonKey)
-	dataStorage := BuildDataStorage(jsonBinKey)
-	getAndStoreMarketData(marketDataAPI, dataStorage, tickers)
+	dataStorage := BuildDataStorage(jsonBinKey, jsonBinCollectionId)
+	binId := getAndStoreMarketData(marketDataAPI, dataStorage, tickers)
+	if err != nil {
+		panic(err)
+	} else {
+		fmt.Printf("Market data stored in JSONBin with ID: %s\n", binId)
+	}
 }
