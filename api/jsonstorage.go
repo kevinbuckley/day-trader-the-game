@@ -9,23 +9,22 @@ import (
 )
 
 type ApiResponse struct {
-	Record struct {
-		Sample string `json:"sample"`
-	} `json:"record"`
 	Metadata struct {
-		ID        string `json:"id"`
-		CreatedAt string `json:"createdAt"`
-		Private   bool   `json:"private"`
+		ID string `json:"id"`
 	} `json:"metadata"`
 }
 
 type DataStorage struct {
 	apiKey              string
 	jsonBinCollectionId string
+	baseUrl             string
 }
 
-func BuildDataStorage(apiKey string, jsonBinCollectionId string) *DataStorage {
-	return &DataStorage{apiKey: apiKey, jsonBinCollectionId: jsonBinCollectionId}
+func BuildDataStorage(
+	apiKey string,
+	jsonBinCollectionId string,
+	baseUrl string) *DataStorage {
+	return &DataStorage{apiKey: apiKey, jsonBinCollectionId: jsonBinCollectionId, baseUrl: baseUrl}
 }
 
 func (d *DataStorage) SendMarketDataToJSONBin(data MarketData) (string, error) {
@@ -34,7 +33,7 @@ func (d *DataStorage) SendMarketDataToJSONBin(data MarketData) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	req, err := http.NewRequest("POST", "https://api.jsonbin.io/v3/b", bytes.NewBuffer(jsonData))
+	req, err := http.NewRequest("POST", d.baseUrl+"/v3/b", bytes.NewBuffer(jsonData))
 	if err != nil {
 		return "", err
 	}

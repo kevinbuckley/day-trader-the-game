@@ -23,11 +23,12 @@ type MarketData struct {
 }
 
 type MarketDataAPI struct {
-	apiKey string
+	apiKey  string
+	baseUrl string
 }
 
-func BuildMarketDataAPI(apiKey string) *MarketDataAPI {
-	return &MarketDataAPI{apiKey: apiKey}
+func BuildMarketDataAPI(apiKey string, baseUrl string) *MarketDataAPI {
+	return &MarketDataAPI{apiKey: apiKey, baseUrl: baseUrl}
 }
 
 func (m *MarketDataAPI) GetTodaysData(tickers []string) (*MarketData, error) {
@@ -52,7 +53,7 @@ func (m *MarketDataAPI) GetTodaysData(tickers []string) (*MarketData, error) {
 }
 
 func (m *MarketDataAPI) getEndOfDay(ticker string) (*MarketDataResponse, error) {
-	url := fmt.Sprintf("https://api.polygon.io/v2/aggs/ticker/%s/prev?adjusted=true&apiKey=%s", ticker, m.apiKey)
+	url := fmt.Sprintf(m.baseUrl+"/v2/aggs/ticker/%s/prev?adjusted=true&apiKey=%s", ticker, m.apiKey)
 
 	resp, err := http.Get(url)
 	if err != nil {

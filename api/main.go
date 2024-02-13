@@ -37,8 +37,8 @@ func main() {
 	jsonBinCollectionId := getRequiredEnvVar("JSON_BIN_COLLECTION_ID")
 
 	tickers := []string{"AAPL", "MSFT", "GOOGL", "AMZN", "FB"}
-	marketDataAPI := BuildMarketDataAPI(polygonKey)
-	dataStorage := BuildDataStorage(jsonBinKey, jsonBinCollectionId)
+	marketDataAPI := BuildMarketDataAPI(polygonKey, "https://api.polygon.io")
+	dataStorage := BuildDataStorage(jsonBinKey, jsonBinCollectionId, "https://api.jsonbin.io")
 	binId := getAndStoreMarketData(marketDataAPI, dataStorage, tickers)
 	if err != nil {
 		panic(err)
